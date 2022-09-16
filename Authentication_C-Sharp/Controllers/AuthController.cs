@@ -41,5 +41,22 @@ namespace Authentication_C_Sharp.Controllers
 
             return Ok(user);
         }
+
+        //creating login controller
+        [HttpPost("login")]
+        public IActionResult Login(LoginDto dto)
+        {
+            User user = db.Users.Where(x => x.Email == dto.Email).FirstOrDefault();
+
+            if (user == null)
+            {
+                return Unauthorized("Invalid credentials!");
+            }
+            if (HashService.HashPassword(dto.Password) != user.Password)
+            {
+                return Unauthorized("Invalid credentials!");
+            }
+            return Ok(user);
+        }
     }
 }
